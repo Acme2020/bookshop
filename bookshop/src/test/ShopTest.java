@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -151,7 +152,7 @@ class ShopTest
     @DisplayName("If a book should be sold that ist not in stock an exception should be thrown")
     void testBookIsNotInStockException()
     {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+        Exception exception = assertThrows(NoSuchElementException.class, () ->
         {
             Book bookToSell = new Book("Medicus", 10.90, 645, "Adventure", "978-1603090254");
             shop.sellBook(bookToSell, customer);
@@ -160,14 +161,13 @@ class ShopTest
     }
 
     @Test
-    @DisplayName("If a book should be sold that ist not in stock an exception should be thrown")
+    @DisplayName("A ISBN with non-numeric characters should return false")
     void testCheckISBNException()
     {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-        {
-            shop.checkISBN("!?! -36G8963762");
-        });
-        assertTrue(exception.getMessage().contains("Book is not in Stock"));
+        ArrayList<Book> books = new ArrayList<Book>();
+        Book book = new Book("Harry Potter", 25.90, 578, "Fantasy", "978-36O8963762");
+        books.add(book);
+        assertEquals(1, shop.addBookToStock(books).size());
     }
 
 }
